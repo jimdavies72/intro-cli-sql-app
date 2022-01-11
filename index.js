@@ -55,6 +55,7 @@ const main = async () => {
     //   console.log(`Card: ${card.name} -> ${card.description}`);
     // }
 
+    // SELECT name, description FROM cards WHERE name = "Stuffy Doll" OR cost = 7;
     const results = await Card.findAll({
       attributes: ["name", "description"],
       where: {
@@ -63,6 +64,19 @@ const main = async () => {
     });
 
     for (let card of results) {
+      console.log(`Card: ${card.name} -> ${card.description}`);
+    }
+
+    await Card.update(
+      { name: "Precursor Golem" },
+      {
+        where: {
+          name: "Meteor Golumn",
+        },
+      }
+    );
+
+    for (let card of await Card.findAll()) {
       console.log(`Card: ${card.name} -> ${card.description}`);
     }
 
