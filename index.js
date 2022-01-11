@@ -92,6 +92,9 @@ const main = async () => {
       console.log(`Card: ${card.name} -> ${card.description}`);
     }
 
+    // Warning - clears the entire table!!
+    // await Card.truncate();
+
     console.log("Connection has successfully established");
   } catch (error) {
     console.error("Unable to connect ", error);
