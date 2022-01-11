@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize, DataTypes, Op } = require("sequelize");
 
 const connection = new Sequelize("master32", "root", "Password01", {
   host: "localhost",
@@ -33,7 +33,7 @@ const main = async () => {
     await connection.authenticate();
     await Card.sync({ alter: true });
 
-    //Create then save in 2 steps
+    // (build then save) Create then save in 2 steps
     // const stuffy_doll = Card.build({
     //   name: "Stuffy Doll",
     //   cost: 5,
@@ -43,11 +43,28 @@ const main = async () => {
     // await stuffy_doll.save();
 
     // Create then save in 1 step
-    await Card.create({
-      name: "Meteor Golumn",
-      cost: 7,
-      description: "Destroys Target",
+    // await Card.create({
+    //   name: "Meteor Golumn",
+    //   cost: 7,
+    //   description: "Destroys Target",
+    // });
+
+    //equivelent to select * FROM Cards
+    // add { where: { name: "Stuffy Doll" } } for a where clause...
+    // for (let card of await Card.findAll({ where: { name: "Stuffy Doll" } })) {
+    //   console.log(`Card: ${card.name} -> ${card.description}`);
+    // }
+
+    const results = await Card.findAll({
+      attributes: ["name", "description"],
+      where: {
+        [Op.or]: [{ name: "Stuffy Doll" }, { cost: 7 }],
+      },
     });
+
+    for (let card of results) {
+      console.log(`Card: ${card.name} -> ${card.description}`);
+    }
 
     console.log("Connection has successfully established");
   } catch (error) {
