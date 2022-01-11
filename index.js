@@ -67,6 +67,7 @@ const main = async () => {
       console.log(`Card: ${card.name} -> ${card.description}`);
     }
 
+    // Update
     await Card.update(
       { name: "Precursor Golem" },
       {
@@ -75,6 +76,17 @@ const main = async () => {
         },
       }
     );
+
+    for (let card of await Card.findAll()) {
+      console.log(`Card: ${card.name} -> ${card.description}`);
+    }
+
+    // DELETE
+    await Card.destroy({
+      where: {
+        [Op.or]: [{ name: "Stuffy Doll" }, { name: "Precursor Golem" }],
+      },
+    });
 
     for (let card of await Card.findAll()) {
       console.log(`Card: ${card.name} -> ${card.description}`);
