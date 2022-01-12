@@ -1,8 +1,8 @@
-const Movie = require("../models/models.js");
+const { Movie } = require("../models/models");
 
 const createMovie = async (movieObj) => {
   try {
-    await Card.create({
+    await Movie.create({
       title: movieObj.title,
       actor: movieObj.actor,
       rating: movieObj.rating,
@@ -14,18 +14,33 @@ const createMovie = async (movieObj) => {
 
 const listMovies = async () => {
   try {
-    for (let card of await Movie.findAll({ where: { name: "Stuffy Doll" } })) {
-      console.log(`Card: ${card.name} -> ${card.description}`);
+    for (let movie of await Movie.findAll()) {
+      console.log(
+        `Title: ${movie.title} featuring ${movie.actor} : Rated: ${movie.rating}`
+      );
     }
   } catch (error) {}
+};
+
+const listSingleMovie = async (title) => {
+  try {
+    for (let movie of await Movie.findAll({ where: { title: title } })) {
+      console.log(
+        `Title: ${movie.title} featuring ${movie.actor} : Rated: ${movie.rating}`
+      );
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = {
   createMovie,
   listMovies,
+  listSingleMovie,
 };
 
-// module.exports = {
+//module.exports = {
 //   createMovie,
 //   addMovie,
 //   listMovies,
