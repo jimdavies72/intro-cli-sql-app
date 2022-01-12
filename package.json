@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prestart": "docker run --rm --name master32-mysql -dp 3306:3306 -v mysql-config:/etc -v mysql-data:/var/lib/mysql mysql/mysql-server:latest && timeout 5",
-    "start": "node index.js",
+    "start": "node src/app.js",
     "poststart": "docker stop master32-mysql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,6 +15,7 @@
   "dependencies": {
     "dotenv": "^11.0.0",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.13.0"
+    "sequelize": "^6.13.0",
+    "yargs": "^17.3.1"
   }
 }
