@@ -6,9 +6,13 @@ const createMovie = async (movieObj) => {
       title: movieObj.title,
       actor: movieObj.actor,
       rating: movieObj.rating,
-    });
+    }).then(
+      displayInfo(
+        `${movieObj.title} was successfully inserted into the database.`
+      )
+    );
   } catch (error) {
-    console.log(error);
+    displayInfo(error.message);
   }
 };
 
@@ -16,21 +20,23 @@ const listMovies = async () => {
   try {
     for (let movie of await Movie.findAll()) {
       console.log(
-        `Title: ${movie.title} featuring ${movie.actor} : Rated: ${movie.rating}`
+        `Title: ${movie.title}, featuring ${movie.actor} : Rated: ${movie.rating}`
       );
     }
-  } catch (error) {}
+  } catch (error) {
+    displayInfo(error.message);
+  }
 };
 
 const listSingleMovie = async (title) => {
   try {
     for (let movie of await Movie.findAll({ where: { title: title } })) {
-      console.log(
-        `Title: ${movie.title} featuring ${movie.actor} : Rated: ${movie.rating}`
+      displayInfo(
+        `Title: ${movie.title}, featuring ${movie.actor} : Rated: ${movie.rating}`
       );
     }
   } catch (error) {
-    console.log(error);
+    displayInfo(error.message);
   }
 };
 
@@ -46,9 +52,19 @@ const updateMovie = async (cliArguments) => {
       where: {
         title: cliArguments.search,
       },
+    }).then((results) => {
+      if (results[0] > 0) {
+        displayInfo(
+          `Movie: '${cliArguments.search}' has successfully been updated.`
+        );
+      } else {
+        displayInfo(
+          `Movie: '${cliArguments.search}' not found. No records have been updated.`
+        );
+      }
     });
   } catch (error) {
-    console.log(error);
+    displayInfo(error.message);
   }
 };
 
@@ -58,22 +74,38 @@ const deleteMovie = async (title) => {
       where: {
         title: title,
       },
+    }).then((results) => {
+      if (results > 0) {
+        displayInfo(`Movie: ${title} has been removed from the database.`);
+      } else {
+        displayInfo(
+          `Movie: ${title} was not found and not removed from the database.`
+        );
+      }
     });
   } catch (error) {
-    console.log(error);
+    displayInfo(error.message);
   }
 };
 
 const deleteAllMovies = async () => {
   try {
     // Warning - clears the entire table!!
-    await Movie.truncate();
+    await Movie.truncate().then(
+      displayInfo("All Movies have been removed from the database.")
+    );
   } catch (error) {
-    console.log(error);
+    displayInfo(error);
   }
 };
 
-//[Op.or]: [{ name: "Stuffy Doll" }, { name: "Precursor Golem" }],
+const displayInfo = (message, clear = true) => {
+  if (clear === true) {
+    console.clear();
+  }
+  console.log(message);
+  console.log("\n");
+};
 
 module.exports = {
   createMovie,
