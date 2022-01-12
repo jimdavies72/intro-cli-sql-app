@@ -34,17 +34,52 @@ const listSingleMovie = async (title) => {
   }
 };
 
+const updateMovie = async (cliArguments) => {
+  try {
+    let update = {};
+
+    cliArguments.title && (update["title"] = cliArguments.title);
+    cliArguments.actor && (update["actor"] = cliArguments.actor);
+    cliArguments.actor && (update["rating"] = cliArguments.rating);
+
+    await Movie.update(update, {
+      where: {
+        title: cliArguments.search,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteMovie = async (title) => {
+  try {
+    await Movie.destroy({
+      where: {
+        title: title,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteAllMovies = async () => {
+  try {
+    // Warning - clears the entire table!!
+    await Movie.truncate();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//[Op.or]: [{ name: "Stuffy Doll" }, { name: "Precursor Golem" }],
+
 module.exports = {
   createMovie,
   listMovies,
   listSingleMovie,
+  updateMovie,
+  deleteMovie,
+  deleteAllMovies,
 };
-
-//module.exports = {
-//   createMovie,
-//   addMovie,
-//   listMovies,
-//   updateMovie,
-//   deleteMovie,
-//   listSingleMovie,
-// };
