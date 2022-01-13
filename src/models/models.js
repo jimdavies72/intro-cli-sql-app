@@ -8,6 +8,7 @@ const Movie = connection.define(
     title: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
 
     actor: {
@@ -21,7 +22,7 @@ const Movie = connection.define(
     },
   },
   {
-    indexed: [{ unique: true, fields: ["name"] }],
+    indexed: [{ unique: true, fields: ["title"] }],
   }
 );
 

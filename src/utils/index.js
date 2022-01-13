@@ -2,7 +2,7 @@ const { Movie } = require("../models/models");
 
 const createMovie = async (movieObj) => {
   try {
-    await Movie.create({
+    const newMovie = await Movie.create({
       title: movieObj.title,
       actor: movieObj.actor,
       rating: movieObj.rating,
@@ -12,12 +12,20 @@ const createMovie = async (movieObj) => {
       )
     );
   } catch (error) {
-    displayInfo(error.message);
+    //console.log(error.name);
+    if (error.name === "SequelizeUniqueConstraintError") {
+      displayInfo(
+        `Movie: ${movieObj.title} already exists in the database. No records were added.`
+      );
+    } else {
+      displayInfo(error.message);
+    }
   }
 };
 
 const listMovies = async () => {
   try {
+    console.clear();
     for (let movie of await Movie.findAll()) {
       console.log(
         `Title: ${movie.title}, featuring ${movie.actor} : Rated: ${movie.rating}`
@@ -46,7 +54,7 @@ const updateMovie = async (cliArguments) => {
 
     cliArguments.title && (update["title"] = cliArguments.title);
     cliArguments.actor && (update["actor"] = cliArguments.actor);
-    cliArguments.actor && (update["rating"] = cliArguments.rating);
+    cliArguments.rating && (update["rating"] = cliArguments.rating);
 
     await Movie.update(update, {
       where: {
